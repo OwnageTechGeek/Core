@@ -1,0 +1,111 @@
+options:
+# Put your server name here 
+	prefix: &9&lExample&c&lExample
+	# This is sent to the player, if they do not have the required permission. (Feel free to change)
+	nopermission: &cInsufficient permissions.
+	
+variables:
+	{logincount} = 0 # Default login count (0)
+	
+# This is the event for when a player joins.	
+on join:
+	wait 2 ticks # Waits 2 ticks before broadcasting a message
+	broadcast "&a[+]&7 %player%"
+	wait 2 ticks # Waits 2 more ticks until it finally messages the player that joined.
+	message "Put your message here" # messages the player this message
+	
+on disconnect:
+	wait 2 ticks # Waits 2 ticks before broadcasting that the player left
+	broadcast "&c[-}&7 %player%"
+	
+command /logincount:
+	permission: youserver.logincount # Make sure to put your server name :)
+	permission message: {@nopermission} # Sends them the message in 'options' called 'nopermission:'
+	# Trigger, is actually where all of the code goes. (I guess it just means, whenever the command "tiggers", or someone executes the command)
+	trigger:
+		# Whenever a player joins, it adds 1 to the login count.
+		message "&fThis server has had &c%{logincount}% logins."
+		
+command /day: # I would recommend giving this command to ADMIN+
+	permission: youserver.setday
+	permission message: {@nopermission}
+	trigger:
+		message "&fYou have set the time to day."
+		# After the message, it waits half a second, broadcasts a message, and makes the player set the time to day.
+		wait 0.5 seconds
+		make player execute command "/time set day"
+		# The '%player%' variable just shows their name (whoever executed the command) 
+		broadcast "&e%player%&f has set the time to &cDAY!"
+		
+command /night: # I would recommend giving this command to ADMIN+
+	permission: yourserver.setnight
+	permission message: {@nopermission}
+	trigger:
+		message "&fYou have set the time to &cNIGHT."
+		wait 0.5 seconds
+		make player execute command "/time set night"
+		broadcast "&e%player%&f has set the time to &cNIGHT!"
+command /kits:
+	permission: yourserver.kits.gui
+	permission message: {@nopermission}
+	trigger:
+		wait 1 tick
+		# Open a chest, with 3 rows. It is named "Kits", with a bluish color 
+		open chest with 3 rows named "&9Kits" to player # To player means, to whoever ran the command :)
+		wait 1 tick # Wait for everything to proccess (recommended)
+		format slot 0 of player with chest named "&eExample Kit" to be unstealable # Unstealable means that the player can not take the chest out 
+		# If you are using essentials, and have the kits setup, you may want to use the line of code below
+		# Basically, what it does is, whenever the player clicks on the chest, it will close the GUI, then make 
+		# The player run the command "/kit (your kit here)"
+		#format slot 1 of player with chest named "&eExample Kit 1" to close then run [make player execute command "/kit (your kit here)"]
+command /punish [<player>]:
+	permission: yourserver.punish.gui
+	permission message: {@nopermission}
+	trigger:
+		if arg 1 is not set: # Meaning, if they did not enter a player, it will tell them the usage of the command
+			message "&cUsage: &f/punish <player>"
+		if arg 1 is set:
+			wait 1 tick
+			open chest with 2 rows named "&cPunish" to player 
+			wait 1 tick # WAit for everything to proccess (recommended)
+			# %arg 1% is a variable for [<player], so if the player entered "/punish Example", skript would substitute [<player>]
+			# For "Example", as it is in argument 1. I hope that makes sense. Make sure to have any questions you may have.
+			format slot 0 of player with emerald named "&eBan" to close then run [make player execute command "/ban %arg 1%"]
+			# If you're using essentials, you may want to use the line of code below. 
+			# format slot 1 of player with coal named "&eTemp Ban" to close then run [make player execute command "/tempban %arg 1% 1d"]
+			# '1d' means the player will be banned for 1 day. You can substitute '1d' for any amount of time you would like
+# Blocked commands 
+command /pl:
+# There's the word 'trigger', again :)
+	trigger:
+# When the player executes the command, it stops it, using the word "stop". (duh)
+		stop
+	# After it stops it, it sends them "&cInsufficient permissions."
+		message "{@nopermission}"
+		
+command /plugins:
+	trigger:
+		stop
+		message "{@nopermission}"
+		
+command /ver:
+	trigger:
+		stop
+		message "{@nopermission}"
+		
+command /version:
+	trigger:
+		stop
+		message "{@nopermission}"
+		
+command /icanhasbukkit:
+	trigger:
+		stop
+		message "{@nopermission}"
+		
+command /?:
+	trigger:
+		stop
+		message "{@nopermission}"
+		
+		
